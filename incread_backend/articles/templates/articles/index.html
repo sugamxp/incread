@@ -1,0 +1,37 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container">
+  {% for article in articles %} {% csrf_token %}
+
+  <div id="{{article.item_id}}">
+    <h5>{{article.title}}</h5>
+    <select class="priority">
+      <option>SELECT</option>
+      <option>ASAP</option>
+      <option>SOON</option>
+      <option>SOMEDAY</option>
+    </select>
+  </div>
+
+  {% endfor %}
+</div>
+
+{% endblock %} {% block js %}
+<script type="text/javascript">
+  $(".priority").on("change", function(e) {
+    console.log(e);
+    console.log(e.target.parentNode.id);
+    $.ajax({
+      type: "POST",
+      url: "articles/change_priority",
+      data: {
+        priority: this.value,
+        art_item_id: e.target.parentNode.id,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+      },
+      success: function() {
+        console.log("SUCCESS");
+      }
+    });
+  });
+</script>
+{% endblock %}
