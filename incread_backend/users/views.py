@@ -54,7 +54,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     'title':user_article.article_fk.title,
                     'excerpt': user_article.article_fk.excerpt,
                     'time_to_read' : user_article.article_fk.time_to_read,
-                    'publisher': user_article.publisher_fk.title,
+                    'publisher': user_article.publisher_fk.url,
                     'time_added_pocket':  datetime.fromtimestamp(user_article.time_added_pocket)}
 
             response.append(data)
