@@ -26,9 +26,13 @@ class UserArticle(models.Model):
 
     # status - 0, 1, 2 - 1 if the item is archived - 2 if the item should be deleted
     status = models.IntegerField()
-
+    read_status = models.CharField(max_length=255, default='DONE')
+    
     def __str__(self):
         return self.article_fk.title
+
+    def getItemId(self):
+        return self.article_fk.item_id
 
 class UserAction(models.Model):
     user_fk = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

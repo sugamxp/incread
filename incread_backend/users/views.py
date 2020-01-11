@@ -49,7 +49,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['GET'])
     def tag_articles(self, request, pk=None):
         user = CustomUser.objects.filter(id=pk)[0]
-        user_articles = UserArticle.objects.filter(user_fk = user).filter(article_fk__time_to_read__isnull = False).filter(priority__isnull=True).order_by('article_fk__time_to_read', '-time_added_pocket')[:7]
+        user_articles = UserArticle.objects.filter(user_fk = user).filter(article_fk__time_to_read__isnull = False).filter(priority__isnull=True).order_by('-time_added_pocket')[:7]
 
         # .select_related('article_fk').order_by('article_fk__time_to_read', 'time_added_pocket')
         response = []
@@ -139,3 +139,49 @@ class UserViewSet(viewsets.ModelViewSet):
 
         response = {'message' :'Success'}
         return Response(response, status=http_status.HTTP_200_OK)
+
+
+    @action(detail=True, methods=['POST'])
+    def update_incread(self, request, pk=None):
+        user = CustomUser.objects.get(id=pk)
+        access_token = user.access_token
+        
+        user_articles = UserArticle.objects.filter(user_fk = user)
+        
+        articles_db = set()
+        for user_article in user_articles:
+            articles_db.add(user_article.getItemId())
+
+        url = f'https://getpocket.com/v3/get?consumer_key=85449-9131725c86119d6dca1cbd8a&access_token={access_token}&\
+                 detailType=detailed&state=unread&sort=newest'
+
+        res = requests.get(url).json()
+        articles = res['list']
+        
+        articles_pocket = set()
+        for i, article_id in enumerate(articles):
+            articles_pocket.add(int(article_id))
+        
+        articles_not_done = articles_db & articles_pocket
+        articles_done = articles_db - articles_pocket
+        
+        for id in articles_not_done:
+            print(id)
+            ua = user_articles.filter(article_fk__item_id=id)
+            for user_article in ua:
+                user_article.read_status = 'NOT DONE'
+                user_article.save()
+
+        for id in articles_done:
+            ua = user_articles.filter(article_fk__item_id=id)
+            for user_article in ua:
+                user_article.read_status = 'DONE'
+                user_article.save()
+
+        response = {'message' :'Success'}
+        return Response(response, status=http_status.HTTP_200_OK)
+
+
+
+
+
