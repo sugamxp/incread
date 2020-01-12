@@ -10,20 +10,18 @@ from .models import UserArticle
 from articles.models import Article, Publisher
 import tldextract
 from rest_framework import viewsets, status as http_status
-
+from datetime import datetime
 class UserArticleViewSet(viewsets.ModelViewSet):
     queryset = UserArticle.objects.all()
     serializer_class = UserArticleSerializer
 
     @action(detail=True, methods=['POST'])
     def set_priority(self, request, pk=None):
-        if 'priority' in request.data:
-            
+        if 'priority' in request.data:   
             priority = request.data['priority']
             user_article = UserArticle.objects.get(id=pk)
             user_article.priority = int(priority)
             user_article.save()
-            print(user_article.priority)
             response = {'message': 'Success', 'id': pk}
             return Response(response, status=status.HTTP_200_OK)
         
@@ -181,7 +179,26 @@ class UserViewSet(viewsets.ModelViewSet):
         response = {'message' :'Success'}
         return Response(response, status=http_status.HTTP_200_OK)
 
+    @action(detail=True, methods=['GET'])
+    def get_priority_list(self, request, pk=None):
 
+        pass
+
+    
+    @action(detail=True, methods=['POST'])
+    def tagging_complete(self, request, pk=None):
+        if 'user_articles_list' in request.data:   
+            user = CustomUser.objects.get(id=pk)
+            user_articles_list = request.data['user_articles_list']
+            for id in user_articles_list:
+                user_article = UserArticle.objects.get(id=id)
+                user_article.tag_number = user.tag_count + 1
+
+            user.tag_count+=1
+            user.save()
+            response = {'message': 'Success'}
+            return Response(response, status=status.HTTP_200_OK)
+        
 
 
 

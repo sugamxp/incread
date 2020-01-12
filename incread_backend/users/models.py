@@ -8,7 +8,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class CustomUser(AbstractUser):
     country = models.CharField(max_length=100)
     access_token = models.CharField(max_length=255)
-    status = models.CharField(max_length=100)
+    status = models.CharField(max_length=100)    
+    tag_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.username
@@ -27,6 +28,7 @@ class UserArticle(models.Model):
     # status - 0, 1, 2 - 1 if the item is archived - 2 if the item should be deleted
     status = models.IntegerField()
     read_status = models.CharField(max_length=255, default='DONE')
+    tag_number = models.IntegerField(default=0)
     
     def __str__(self):
         return self.article_fk.title
