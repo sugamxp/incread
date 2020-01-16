@@ -11,6 +11,8 @@ from articles.models import Article, Publisher
 import tldextract
 from rest_framework import viewsets, status as http_status
 from datetime import datetime
+import collections
+from users.utility import get_impact_score
 class UserArticleViewSet(viewsets.ModelViewSet):
     queryset = UserArticle.objects.all()
     serializer_class = UserArticleSerializer
@@ -33,7 +35,7 @@ class UserArticleViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-
+            
     @action(detail=True, methods=['GET'])
     def stats(self, request,pk=None):
         user = CustomUser.objects.filter(id=pk)[0]
@@ -167,13 +169,13 @@ class UserViewSet(viewsets.ModelViewSet):
             print(id)
             ua = user_articles.filter(article_fk__item_id=id)
             for user_article in ua:
-                user_article.read_status = 'NOT DONE'
+                user_article.read_status_pocket = 'NOT DONE'
                 user_article.save()
 
         for id in articles_done:
             ua = user_articles.filter(article_fk__item_id=id)
             for user_article in ua:
-                user_article.read_status = 'DONE'
+                user_article.read_status_pocket = 'DONE'
                 user_article.save()
 
         response = {'message' :'Success'}
@@ -181,15 +183,58 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['GET'])
     def get_priority_list(self, request, pk=None):
-        impact_matrix = [[30,55,75,90,100],
-                         [5,35,60,80,95],
-                         [0,15,40,65,85],
-                         [0,0,20,45,70],
-                         [0,0,0,25,50]]
 
         user = CustomUser.objects.get(id=pk)
         tag_count = user.tag_count
+
+        if tag_count==1:
+            time_to_read = {}
+            user_articles = UserArticle.objects.filter(tag_number=tag_count).filter(read_status_incread=False)
+            for ua in user_articles:
+                if ua.article_fk.time_to_read in time_to_read:
+                    time_to_read[ua.article_fk.time_to_read].update({ua.id : ua.priority})
+                else:
+                    time_to_read[ua.article_fk.time_to_read] = {ua.id : ua.priority}
+            
+            time_to_read = collections.OrderedDict(sorted(time_to_read.items()))
+            unique_time_to_read = list(time_to_read)
+            print(time_to_read)
+
+            for i,ttr in enumerate(unique_time_to_read):
+                if i<=3:
+                    time_to_read[ttr] = get_impact_score(i, time_to_read[ttr])
+                else:
+                    time_to_read[ttr] = get_impact_score(4, time_to_read[ttr])
+            
+            print("TTR", time_to_read)
+            
         
+        prioritized_list = {}
+        for ttr in time_to_read:
+            prioritized_list.update(time_to_read[ttr])
+
+        prioritized_list = collections.OrderedDict({k: v for k, v in sorted(prioritized_list.items(), key=lambda item : (-item[1],-item[0]))})
+        
+        print(prioritized_list)
+
+        response = []
+        for i,article_id in enumerate(prioritized_list):
+            if i==5:
+                break
+            user_article = UserArticle.objects.filter(user_fk = user).get(article_fk=article_id)
+
+            data = {'id':user_article.id,
+                    'title':user_article.article_fk.title,
+                    'excerpt': user_article.article_fk.excerpt,
+                    'time_to_read' : user_article.article_fk.time_to_read,
+                    'publisher': user_article.publisher_fk.url,
+                    'time_added_pocket':  datetime.fromtimestamp(user_article.time_added_pocket)}
+
+            response.append(data)
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
     @action(detail=True, methods=['POST'])
     def tagging_complete(self, request, pk=None):
         if 'user_articles_list' in request.data:   

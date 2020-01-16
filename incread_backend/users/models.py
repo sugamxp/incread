@@ -27,7 +27,8 @@ class UserArticle(models.Model):
 
     # status - 0, 1, 2 - 1 if the item is archived - 2 if the item should be deleted
     status = models.IntegerField()
-    read_status = models.CharField(max_length=255, default='DONE')
+    read_status_pocket = models.CharField(max_length=255, default='DONE')
+    read_status_incread = models.BooleanField(default=False)
     tag_number = models.IntegerField(default=0)
     
     def __str__(self):
