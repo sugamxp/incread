@@ -181,10 +181,15 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['GET'])
     def get_priority_list(self, request, pk=None):
+        impact_matrix = [[30,55,75,90,100],
+                         [5,35,60,80,95],
+                         [0,15,40,65,85],
+                         [0,0,20,45,70],
+                         [0,0,0,25,50]]
 
-        pass
-
-    
+        user = CustomUser.objects.get(id=pk)
+        tag_count = user.tag_count
+        
     @action(detail=True, methods=['POST'])
     def tagging_complete(self, request, pk=None):
         if 'user_articles_list' in request.data:   

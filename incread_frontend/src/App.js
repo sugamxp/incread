@@ -3,6 +3,8 @@ import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import StatsComponent from "./components/stats/stats-component";
 import TagArticlesComponent from "./components/tag-articles/tag-articles-component";
+import LoginComponent from "./components/login-component";
+import UserNameComponent from "./components/username-component";
 
 class App extends Component {
   render() {
@@ -10,7 +12,9 @@ class App extends Component {
       <Router>
         <div>
           <Switch>
-            <Route exact path="/" component={StatsComponent} />
+            <Route exact path="/" component={LoginComponent} />
+            <Route exact path="/stats" component={StatsComponent} />
+            <Route exact path="/username" component={UserNameComponent} />
             <Route
               exact
               path="/tag-articles"

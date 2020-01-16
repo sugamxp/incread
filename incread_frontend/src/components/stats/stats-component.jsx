@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import "./stats-component.css";
-import pocket_logo from "../../static/pocket_logo.png";
+import pocket_logo from "../../static/pocket.svg";
 import axios from "axios";
 
 export default class StatsComponent extends Component {
@@ -24,64 +23,79 @@ export default class StatsComponent extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="row">
-          <div className="col ml-5 mt-5 p-0 username ">Aditya</div>
-          <div className="col mt-5 text-center">
-            <img src={pocket_logo} alt="NoImage" />
+      <section id="page-5">
+        <div class="container-fluid">
+          <div class="main-container">
+            <div class="user-pocket">
+              <h1 class="main-title text-black">
+                Aditya
+                <span class="float-right">
+                  <img src={pocket_logo} height="30px" width="32px" alt="" />
+                </span>
+              </h1>
+              <p class="main-title-content text-black">
+                your Pocket consists of
+              </p>
+            </div>
+            <div class="user-info">
+              <div class="row">
+                <div class="col">
+                  <p class="text-green number-info">
+                    {this.state.num_of_articles}
+                  </p>
+                  <p class="main-title-content text-black articles">Articles</p>
+                </div>
+                <div class="col">
+                  <p class="text-green number-info">
+                    {this.state.num_of_publications}
+                  </p>
+                  <p class="main-title-content text-black articles">
+                    Publications
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="extra-info mt-60">
+              <div class="row row-ptb-16">
+                <div class="col-2 position-relative">
+                  <div class="rating-icon-2"></div>
+                </div>
+                <div class="col pl-10">
+                  <p class="rating-title text-gray">
+                    It’ll take you __ years to complete your reading list if you
+                    read for an hour every day
+                  </p>
+                </div>
+              </div>
+              <div class="row row-ptb-16">
+                <div class="col-2 position-relative">
+                  <div class="rating-icon-2"></div>
+                </div>
+                <div class="col pl-10">
+                  <p class="rating-title text-gray">
+                    __ % of your reading list is from medium.com followed by __
+                    % from linkedin.com
+                  </p>
+                </div>
+              </div>
+              <div class="row row-ptb-16">
+                <div class="col-2 position-relative">
+                  <div class="rating-icon-2"></div>
+                </div>
+                <div class="col pl-10">
+                  <p class="rating-title text-gray">
+                    Reading 5789 articles is equivalent to researching for __
+                    PhDs
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-40">
+              <button class="btn-general btn-blue btn-bg">Continue</button>
+            </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col ml-5 mt-3 p-0 info-text">
-            your Pocket consists of
-          </div>
-        </div>
-
-        <div className="row mt-5">
-          <div className="col num-of text-center ">
-            {this.state.num_of_articles}
-          </div>
-          <div className="col num-of text-center  ">
-            {this.state.num_of_publications}
-          </div>
-        </div>
-        <div className="row mt-1">
-          <div className="col text-center desc ">Articles</div>
-          <div className="col text-center desc ">Publications</div>
-        </div>
-
-        <div className="row mt-5">
-          <div className="col-2 text-center p-0">
-            <div className="pointer ml-5 p-0"></div>
-          </div>
-          <div className="fact col-10 pr-5">
-            It’ll take you __ years to complete your reading list if you read
-            for an hour every day
-          </div>
-        </div>
-        <div className="row mt-5">
-          <div className="col-2 text-center p-0">
-            <div className="pointer ml-5 p-0"></div>
-          </div>
-          <div className="fact col-10 pr-5">
-            It’ll take you __ years to complete your reading list if you read
-            for an hour every day
-          </div>
-        </div>
-        <div className="row mt-5">
-          <div className="col-2 text-center p-0">
-            <div className="pointer ml-5 p-0"></div>
-          </div>
-          <div className="fact col-10  pr-5">
-            It’ll take you __ years to complete your reading list if you read
-            for an hour every day
-          </div>
-        </div>
-
-        <div className="fixed-bottom text-center mb-5">
-          <button className="btn-continue text-light">Continue</button>
-        </div>
-      </div>
+      </section>
     );
   }
 }

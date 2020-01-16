@@ -1,0 +1,285 @@
+/**
+ * style.css
+ * 
+ */
+
+/* =========================================
+    Default Theme
+    ----------------------------------------
+    Fonts: Montserrat
+    ----------------------------------------
+    Colors:
+          
+============================================ */
+
+/***********************************************************
+                        GENERAL
+***********************************************************/
+html, body{
+    width: 100%;
+    height: 100%;
+    text-align: justify;
+    
+}
+h1, h2, h3, h4, h5, h6,p{
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+p{
+    margin: 0;
+    padding: 0;
+}
+a,
+a:focus,
+a:hover{
+    text-decoration: none;
+}
+section{
+    background: #FFF;
+}
+.main-container{
+/*    margin: 60px 0;*/
+    padding: 60px 40px 0;
+}
+.container-fluid{
+    padding: 0;
+}
+.pb-40{
+    padding-bottom: 40px;
+}
+.ptb-20{
+    padding: 20px 0;
+}
+.ptb-40{
+    padding: 40px 0;
+}
+.pt-40{
+    padding-top: 40px;
+}
+.ptb-16{
+   padding: 16px 0; 
+}
+.ptb-15{
+    padding: 15px 0 !important;
+}
+.ptb-8{
+   padding: 8px 0; 
+}
+.pl-10{
+    padding-left: 5px !important;
+}
+.plr-20{
+    padding: 0 20px;
+}
+.row-ptb-16{
+    padding: 16px 0 !important;
+}
+.mt-20{
+    margin-top: 20px;
+}
+.mt-30{
+    margin-top: 30px;
+}
+.mt-40{
+    margin-top: 40px;
+}
+.mt-60{
+    margin-top: 60px;
+}
+.mt-80{
+    margin-top: 80px;
+}
+input[type=text] {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #95989A;
+    padding: 5px; 
+}
+input::placeholder{
+    color: #95989A;
+}
+/***********************************************************
+                        GENERAL BUTTONS
+***********************************************************/
+.btn-general{
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 8px;
+    transition: all .5s;
+    border-style: none;
+    padding: 16px 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+.btn-bg{
+    min-width: 80%;
+}
+
+.btn-blue{
+    color: #FFF;
+    background-color: #007eff;
+}
+.btn-white{
+    color: #007eff;
+    background-color: #FFF;
+    border: 1px solid #007eff;
+}
+.btn-login{
+    font-size: 16px;
+    box-shadow: 0px 4px 16px rgba(216, 216, 216, 0.25);
+    background-color: #fff;
+    font-weight: normal;
+}
+.col-2{
+    padding: 0;
+}
+.col{
+    padding: 0;
+}
+/***********************************************************
+                        HOME SECTION
+***********************************************************/
+
+
+.number-info{
+    font-style: normal;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 48px;
+}
+
+
+.text-green{
+    color: #2AC769;
+}
+
+.text-black{
+    color: #000;
+}
+.text-dark-gray{
+    color: #333;
+}
+.text-gray{
+    color: #666;
+}
+.text-14-gray{
+    color: #666;
+    font-size: 14px;
+}
+.main-title{
+    font-size: 36px;
+    font-weight: 800;
+    
+}
+.main-title-content{
+    font-size: 22px;
+    font-weight: normal;
+    padding: 20px 0;
+    line-height: 31px;
+}
+.bg-gray{
+    background-color:#F5F6FA;
+}
+.main-article-title{
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: normal;
+}
+.main-article-content{
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: normal;
+}
+.container-rounded{
+    background: #FFFFFF;
+    box-shadow: 0px -8px 16px rgba(149, 152, 154, 0.1);
+    border-radius: 32px 32px 0px 0px;
+}
+.main-rating-outer{
+    position: relative;
+    top: -40px;   
+}
+.rating-icon{
+    
+/*    margin-right: 19px;*/
+    width: 45px;
+    height: 45px;
+    position:absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(246, 166, 9, 0.1);
+    border-radius: 4.33333px;
+}
+.rating-icon-2{
+/*    margin-right: 19px;*/
+    width: 20px;
+    height: 20px;
+    position:absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #F6A609;
+    border-radius: 4px;
+}
+.rating-marks{
+    font-style: normal;
+    font-weight: bold;
+    font-size: 17.3333px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.row{
+    margin: 0;
+    padding: 5px 0;
+}
+.rating-title{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 21px;
+}
+.rating-content{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 18px; 
+}
+.rating-subcontent{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 9px;
+    line-height: 12px;
+}
+.position-relative{
+    position: relative;
+}
+.pocket-svg{
+    margin: 0 10px;
+    float: left;
+}
+.articles{
+    padding: 10px 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
