@@ -13,6 +13,9 @@ from rest_framework import viewsets, status as http_status
 from datetime import datetime
 import collections
 from users.utility import get_impact_score
+from django.http import HttpResponseRedirect
+
+
 class UserArticleViewSet(viewsets.ModelViewSet):
     queryset = UserArticle.objects.all()
     serializer_class = UserArticleSerializer
@@ -182,7 +185,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(response, status=http_status.HTTP_200_OK)
 
     @action(detail=True, methods=['GET'])
-    def get_priority_list(self, request, pk=None):
+    def get_priority_list_onboarding(self, request, pk=None):
 
         user = CustomUser.objects.get(id=pk)
         tag_count = user.tag_count
@@ -209,31 +212,35 @@ class UserViewSet(viewsets.ModelViewSet):
             print("TTR", time_to_read)
             
         
-        prioritized_list = {}
-        for ttr in time_to_read:
-            prioritized_list.update(time_to_read[ttr])
+            prioritized_list = {}
+            for ttr in time_to_read:
+                prioritized_list.update(time_to_read[ttr])
 
-        prioritized_list = collections.OrderedDict({k: v for k, v in sorted(prioritized_list.items(), key=lambda item : (-item[1],-item[0]))})
+            prioritized_list = collections.OrderedDict({k: v for k, v in sorted(prioritized_list.items(), key=lambda item : (-item[1],-item[0]))})
+            
+            print(prioritized_list)
+
+            response = []
+            for i,article_id in enumerate(prioritized_list):
+                if i==5:
+                    break
+                user_article = UserArticle.objects.filter(user_fk = user).get(article_fk=article_id)
+
+                data = {'id':user_article.id,
+                        'title':user_article.article_fk.title,
+                        'excerpt': user_article.article_fk.excerpt,
+                        'time_to_read' : user_article.article_fk.time_to_read,
+                        'publisher': user_article.publisher_fk.url,
+                        'time_added_pocket':  datetime.fromtimestamp(user_article.time_added_pocket)}
+
+                response.append(data)
+
+            return Response(response, status=status.HTTP_200_OK)
         
-        print(prioritized_list)
+        else:
 
-        response = []
-        for i,article_id in enumerate(prioritized_list):
-            if i==5:
-                break
-            user_article = UserArticle.objects.filter(user_fk = user).get(article_fk=article_id)
-
-            data = {'id':user_article.id,
-                    'title':user_article.article_fk.title,
-                    'excerpt': user_article.article_fk.excerpt,
-                    'time_to_read' : user_article.article_fk.time_to_read,
-                    'publisher': user_article.publisher_fk.url,
-                    'time_added_pocket':  datetime.fromtimestamp(user_article.time_added_pocket)}
-
-            response.append(data)
-
-        return Response(response, status=status.HTTP_200_OK)
-
+            response={'Message' : 'Failure'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['POST'])
     def tagging_complete(self, request, pk=None):
@@ -249,6 +256,15 @@ class UserViewSet(viewsets.ModelViewSet):
             response = {'message': 'Success'}
             return Response(response, status=status.HTTP_200_OK)
         
+    @action(detail=False, methods=['POST'])
+    def auth(self, request):
+        data = {'consumer_key':'89050-826efaf95b626015834d7a44', 
+                'redirect_uri':'https://www.google.com/'} 
 
-
-
+        r = requests.post(url = 'https://getpocket.com/v3/oauth/request', data = data) 
+        
+        code = r.text.split('=')[1]
+        print(code)
+        
+        response = {'message': 'Success', 'code' : code}
+        return Response(response, status=status.HTTP_200_OK)

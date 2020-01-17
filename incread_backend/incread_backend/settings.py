@@ -66,6 +66,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
+    'http://192.168.0.5:3000'
 )
 ROOT_URLCONF = 'incread_backend.urls'
 
