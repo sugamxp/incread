@@ -12,7 +12,7 @@ import tldextract
 from rest_framework import viewsets, status as http_status
 from datetime import datetime
 import collections
-from users.utility import get_impact_score
+from users.utility import get_impact_score, get_prioritize_articles_list
 from django.http import HttpResponseRedirect
 
 
@@ -185,60 +185,33 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(response, status=http_status.HTTP_200_OK)
 
     @action(detail=True, methods=['GET'])
-    def get_priority_list_onboarding(self, request, pk=None):
+    def get_priority_list(self, request, pk=None):
 
         user = CustomUser.objects.get(id=pk)
         tag_count = user.tag_count
 
         if tag_count==1:
-            time_to_read = {}
-            user_articles = UserArticle.objects.filter(tag_number=tag_count).filter(read_status_incread=False)
-            for ua in user_articles:
-                if ua.article_fk.time_to_read in time_to_read:
-                    time_to_read[ua.article_fk.time_to_read].update({ua.id : ua.priority})
-                else:
-                    time_to_read[ua.article_fk.time_to_read] = {ua.id : ua.priority}
-            
-            time_to_read = collections.OrderedDict(sorted(time_to_read.items()))
-            unique_time_to_read = list(time_to_read)
-            print(time_to_read)
-
-            for i,ttr in enumerate(unique_time_to_read):
-                if i<=3:
-                    time_to_read[ttr] = get_impact_score(i, time_to_read[ttr])
-                else:
-                    time_to_read[ttr] = get_impact_score(4, time_to_read[ttr])
-            
-            print("TTR", time_to_read)
-            
-        
-            prioritized_list = {}
-            for ttr in time_to_read:
-                prioritized_list.update(time_to_read[ttr])
-
-            prioritized_list = collections.OrderedDict({k: v for k, v in sorted(prioritized_list.items(), key=lambda item : (-item[1],-item[0]))})
-            
-            print(prioritized_list)
-
             response = []
-            for i,article_id in enumerate(prioritized_list):
-                if i==5:
-                    break
-                user_article = UserArticle.objects.filter(user_fk = user).get(article_fk=article_id)
-
-                data = {'id':user_article.id,
-                        'title':user_article.article_fk.title,
-                        'excerpt': user_article.article_fk.excerpt,
-                        'time_to_read' : user_article.article_fk.time_to_read,
-                        'publisher': user_article.publisher_fk.url,
-                        'time_added_pocket':  datetime.fromtimestamp(user_article.time_added_pocket)}
-
-                response.append(data)
-
+            user_articles = UserArticle.objects.filter(tag_number=tag_count).filter(article_fk__time_to_read__isnull = False).filter(read_status_incread=False)
+            response.extend(get_prioritize_articles_list(5, user_articles, user))
             return Response(response, status=status.HTTP_200_OK)
         
-        else:
 
+        elif tag_count>1:
+            response = []
+            #past 2 instances
+            user_articles = UserArticle.objects.filter(tag_number__gte=tag_count-1).filter(article_fk__time_to_read__isnull = False).filter(priority__isnull=False).filter(read_status_incread=False)
+            articles, ids = get_prioritize_articles_list(2, user_articles, user)
+            response.extend(articles)
+            #random, max value, lowest time
+            user_articles = UserArticle.objects.filter(article_fk__time_to_read__isnull = False).filter(read_status_incread=False).filter(priority__isnull=False).exclude(id__in=ids)
+            articles, ids = get_prioritize_articles_list(3, user_articles, user)
+            response.extend(articles)
+
+
+            return Response(response, status=status.HTTP_200_OK)
+
+        else:
             response={'Message' : 'Failure'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
