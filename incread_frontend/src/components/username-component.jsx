@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import username from "../static/username.svg";
 export default class UserNameComponent extends Component {
   render() {
     return (
@@ -19,6 +19,9 @@ export default class UserNameComponent extends Component {
             <br />
             <button className="btn-general btn-blue mt-60">Next</button>
           </div>
+        </div>
+        <div class="illus-page-2" style={{ overflow: "hidden" }}>
+          <img src={username} alt="" />
         </div>
       </section>
     );

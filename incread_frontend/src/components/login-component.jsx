@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
-
+import login1 from "../static/login1.svg";
+import login2 from "../static/login2.svg";
 export default class LoginComponent extends Component {
   render() {
     return (
@@ -22,6 +22,16 @@ export default class LoginComponent extends Component {
               </span>
               Login with Pocket
             </button>
+          </div>
+        </div>
+        <div class="illustrations">
+          <div class="row" style={{ overflow: "hidden" }}>
+            <div class="col-7">
+              <img src={login1} alt="" />
+            </div>
+            <div class="col-5" style={{ overflow: "hidden" }}>
+              <img src={login2} alt="" class="illus-img" />
+            </div>
           </div>
         </div>
       </section>

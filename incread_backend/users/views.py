@@ -14,7 +14,7 @@ from datetime import datetime
 import collections
 from users.utility import get_impact_score, get_prioritize_articles_list
 from django.http import HttpResponseRedirect
-
+import random
 
 class UserArticleViewSet(viewsets.ModelViewSet):
     queryset = UserArticle.objects.all()
@@ -52,25 +52,52 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['GET'])
     def tag_articles(self, request, pk=None):
         user = CustomUser.objects.filter(id=pk)[0]
-        user_articles = UserArticle.objects.filter(user_fk = user).filter(article_fk__time_to_read__isnull = False).filter(priority__isnull=True).order_by('-time_added_pocket')[:7]
-
-        # .select_related('article_fk').order_by('article_fk__time_to_read', 'time_added_pocket')
-        response = []
-        for i,user_article in enumerate(user_articles):
-
-            data = {'id':user_article.id,
-                    'title':user_article.article_fk.title,
-                    'excerpt': user_article.article_fk.excerpt,
-                    'time_to_read' : user_article.article_fk.time_to_read,
-                    'publisher': user_article.publisher_fk.url,
-                    'time_added_pocket':  datetime.fromtimestamp(user_article.time_added_pocket)}
-
-            response.append(data)
-            
-
+        #onboarding
+        if user.tag_count==0:
         
-        # response = {'message':'Success'}
-        return Response(response, status=status.HTTP_200_OK)
+            latest_articles = UserArticle.objects.filter(user_fk = user).filter(article_fk__time_to_read__isnull = False).filter(priority__isnull=True).order_by('-time_added_pocket')[:3]
+            ids = [article.id for article in latest_articles]     
+            random_articles = random.choices(UserArticle.objects.filter(user_fk = user).filter(article_fk__time_to_read__isnull = False).filter(priority__isnull=True).exclude(id__in=ids), k=4)
+            response = []
+            for i,user_article in enumerate(latest_articles):
+
+                data = {'id':user_article.id,
+                        'title':user_article.article_fk.title,
+                        'excerpt': user_article.article_fk.excerpt,
+                        'time_to_read' : user_article.article_fk.time_to_read,
+                        'publisher': user_article.publisher_fk.url,
+                        'time_added_pocket':  datetime.fromtimestamp(user_article.time_added_pocket)}
+
+                response.append(data)
+                
+            for i,user_article in enumerate(random_articles):
+
+                data = {'id':user_article.id,
+                        'title':user_article.article_fk.title,
+                        'excerpt': user_article.article_fk.excerpt,
+                        'time_to_read' : user_article.article_fk.time_to_read,
+                        'publisher': user_article.publisher_fk.url,
+                        'time_added_pocket':  datetime.fromtimestamp(user_article.time_added_pocket)}
+
+                response.append(data)
+            # response = {'message':'Success'}
+            return Response(response, status=status.HTTP_200_OK)
+
+        else:
+            random_articles = random.choices(UserArticle.objects.filter(user_fk = user).filter(article_fk__time_to_read__isnull = False).filter(priority__isnull=True), k=7)
+            response = []
+            for i,user_article in enumerate(random_articles):
+
+                data = {'id':user_article.id,
+                        'title':user_article.article_fk.title,
+                        'excerpt': user_article.article_fk.excerpt,
+                        'time_to_read' : user_article.article_fk.time_to_read,
+                        'publisher': user_article.publisher_fk.url,
+                        'time_added_pocket':  datetime.fromtimestamp(user_article.time_added_pocket)}
+
+                response.append(data)
+            # response = {'message':'Success'}
+            return Response(response, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['GET'])
     def get_latest_articles(self, request,pk=None):
