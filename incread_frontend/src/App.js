@@ -7,12 +7,12 @@ import LoginComponent from "./components/login-component";
 import UserNameComponent from "./components/username-component";
 import PrioritizeListComponent from "./components/prioritize-list-component";
 import ReadingCompleteComponent from "./components/reading-complete-component";
-
+import { CookiesProvider, withCookies } from "react-cookie";
 class App extends Component {
   render() {
     return (
       <Router>
-        <div>
+        <CookiesProvider>
           <Switch>
             <Route exact path="/" component={LoginComponent} />
             <Route exact path="/stats" component={StatsComponent} />
@@ -33,10 +33,10 @@ class App extends Component {
               component={ReadingCompleteComponent}
             />
           </Switch>
-        </div>
+        </CookiesProvider>
       </Router>
     );
   }
 }
 
-export default App;
+export default withCookies(App);

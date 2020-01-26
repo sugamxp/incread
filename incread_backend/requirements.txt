@@ -11,6 +11,7 @@ cryptography==2.8
 defusedxml==0.6.0
 Django==2.2.5
 django-allauth==0.40.0
+django-braces==1.14.0
 django-celery==3.3.1
 django-cors-headers==3.2.0
 django-oauth-toolkit==1.2.0
@@ -20,6 +21,7 @@ idna==2.8
 jsonfield==2.0.2
 kombu==3.0.37
 oauthlib==3.0.1
+pipenv==2018.11.26
 psycopg2==2.8.4
 pycparser==2.19
 PyJWT==1.7.1
@@ -35,5 +37,7 @@ sqlparse==0.3.0
 tldextract==2.2.2
 tzlocal==2.0.0
 urllib3==1.25.7
+virtualenv==16.7.9
+virtualenv-clone==0.5.3
 win-inet-pton==1.1.0
 wincertstore==0.2

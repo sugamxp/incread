@@ -13,8 +13,10 @@ from rest_framework import viewsets, status as http_status
 from datetime import datetime
 import collections
 from users.utility import get_impact_score, get_prioritize_articles_list
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 import random
+import json
+from users.models import CustomUser
 
 class UserArticleViewSet(viewsets.ModelViewSet):
     queryset = UserArticle.objects.all()
@@ -41,12 +43,12 @@ class UserViewSet(viewsets.ModelViewSet):
             
     @action(detail=True, methods=['GET'])
     def stats(self, request,pk=None):
-        user = CustomUser.objects.filter(id=pk)[0]
+        user = CustomUser.objects.filter(access_token=pk)[0]
         user_articles = UserArticle.objects.filter(user_fk = user)
         no_of_articles = len(user_articles)
         unique_publishers = len(set(user_articles.values_list('publisher_fk')))
         print(unique_publishers)
-        response = {'message':'Success','no_of_articles': no_of_articles, 'unique_publishers': unique_publishers}
+        response = {'message':'Success','no_of_articles': no_of_articles, 'unique_publishers': unique_publishers, 'username': user.username}
         return Response(response, status=status.HTTP_200_OK)
         
     @action(detail=True, methods=['GET'])
@@ -99,16 +101,19 @@ class UserViewSet(viewsets.ModelViewSet):
             # response = {'message':'Success'}
             return Response(response, status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['GET'])
+    @action(detail=True, methods=['POST'])
     def get_latest_articles(self, request,pk=None):
-        user = CustomUser.objects.filter(id=pk)[0]
+        user = CustomUser.objects.filter(access_token=pk)[0]
         access_token = user.access_token
-        last_user_article = UserArticle.objects.filter(user_fk = user).order_by('-time_added_pocket')[0]
-        last_timestamp = last_user_article.time_added_pocket
+        try:
+            last_user_article = UserArticle.objects.filter(user_fk = user).order_by('-time_added_pocket')[0]
+            last_timestamp = last_user_article.time_added_pocket
+        except:
+            last_timestamp=0
         print(last_timestamp)
-        url = f'https://getpocket.com/v3/get?consumer_key=85449-9131725c86119d6dca1cbd8a&access_token={access_token}&\
-                 detailType=detailed&state=unread&sort=newest&since={last_timestamp}'
+        url = f'https://getpocket.com/v3/get?consumer_key=85449-9131725c86119d6dca1cbd8a&access_token={access_token}&detailType=detailed&state=unread&sort=newest&since={last_timestamp}'
 
+        print(url)
         res = requests.get(url).json()
         articles = res['list']
 
@@ -169,7 +174,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
         response = {'message' :'Success'}
         return Response(response, status=http_status.HTTP_200_OK)
-
 
     @action(detail=True, methods=['POST'])
     def update_incread(self, request, pk=None):
@@ -259,12 +263,48 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'])
     def auth(self, request):
         data = {'consumer_key':'89050-826efaf95b626015834d7a44', 
-                'redirect_uri':'https://www.google.com/'} 
+                'redirect_uri':'http://localhost:3000/'} 
 
         r = requests.post(url = 'https://getpocket.com/v3/oauth/request', data = data) 
         
         code = r.text.split('=')[1]
         print(code)
         
-        response = {'message': 'Success', 'code' : code}
+        # response = {'message': 'Success', 'code' : code}
+        # return Response(response, status=status.HTTP_200_OK)
+
+        response = {'auth_page':f"https://getpocket.com/auth/authorize?request_token={code}&redirect_uri={data['redirect_uri']}", 'code' :code}
         return Response(response, status=status.HTTP_200_OK)
+
+
+    @action(detail=False, methods=['POST'])
+    def get_access_token(self, request):
+        if 'code' in request.data:
+            code = request.data['code']
+            print(code)
+            data = {'consumer_key':'89050-826efaf95b626015834d7a44', 
+                    'code':code} 
+            r = requests.post(url = 'https://getpocket.com/v3/oauth/authorize',data=data) 
+            print(r.text)
+            access_token = r.text.split('&')[0].split('=')[1]
+            email = r.text.split('&')[1].split('=')[1].replace('%40','@')
+            
+            print(access_token, email)
+            try :
+                user = CustomUser.objects.get(email=email)
+            except CustomUser.DoesNotExist:
+                user = CustomUser.objects.create_user(email,email,access_token, access_token=access_token)
+            response = {'message':'Success', 'access_token': user.access_token, 'user_id' : user.id}
+            return Response(response, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['POST'])
+    def update_username(self, request, pk=None):
+        if 'username' in request.data:
+            username = request.data['username']
+            user = CustomUser.objects.filter(access_token=pk)[0]
+            user.username = username
+            user.save()
+            response = {'message':'Success'}
+            return Response(response, status=status.HTTP_200_OK)
+
+

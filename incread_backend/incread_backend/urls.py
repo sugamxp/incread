@@ -7,5 +7,4 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('articles/', include('articles.urls')),
     path('users/', include('users.urls')),
-    path('auth/', include('social_django.urls', namespace='social')),
 ]

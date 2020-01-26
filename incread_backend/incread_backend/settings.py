@@ -41,10 +41,9 @@ INSTALLED_APPS = [
     'articles',
     'rest_framework',
     'corsheaders',
-    'oauth2_provider',
-    'social_django',
-    'rest_framework_social_oauth2',
+    'django.contrib.sites'
 ]
+SITE_ID = 1
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -81,26 +80,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES' : (
-        # 'oauth2_provider.ext.rest_framework.OAuth2Authentication',  # django-oauth-toolkit < 1.0.0
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # django-oauth-toolkit >= 1.0.0
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
-    ),
-}
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.pocket.PocketAuth',
-   'rest_framework_social_oauth2.backends.Pocket',
-   'django.contrib.auth.backends.ModelBackend',
-)
-
 
 WSGI_APPLICATION = 'incread_backend.wsgi.application'
 
@@ -110,8 +93,11 @@ WSGI_APPLICATION = 'incread_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 
