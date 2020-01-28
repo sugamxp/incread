@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+CONSUMER_KEY = "85449-9131725c86119d6dca1cbd8a"
 # Application definition
 
 INSTALLED_APPS = [

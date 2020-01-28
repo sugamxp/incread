@@ -1,3 +1,9 @@
 {
-    "python.pythonPath": "C:\\Users\\sugamxp\\Anaconda3\\envs\\incread\\python.exe"
+    "python.pythonPath": "C:\\Users\\sugamxp\\Anaconda3\\envs\\incread\\python.exe",
+    "workbench.colorCustomizations": {
+        "statusBar.background": "#388e3c",
+        "statusBarItem.hoverBackground": "#46b34b",
+        "statusBar.foreground": "#e7e7e7"
+    },
+    "peacock.color": "#388E3C"
 }

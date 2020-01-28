@@ -19,6 +19,10 @@ html,
 body {
   width: 100%;
   height: 100%;
+  /*    text-align: justify;*/
+}
+section {
+  height: 100%;
 }
 h1,
 h2,
@@ -45,28 +49,26 @@ section {
 }
 .main-container {
   /*    margin: 60px 0;*/
-  padding: 60px 40px 0;
+  padding: 8vh 10vw 0;
 }
 .main-container-2 {
-  padding: 40px 20px;
+  padding: 5.5vh 5vw;
 }
 .container-fluid {
   padding: 0;
 }
 .pr-16 {
-  padding-right: 16px !important;
+  padding-right: 4.2vw !important;
 }
 .pb-40 {
-  padding-bottom: 40px;
+  padding-bottom: 5.32vh;
 }
-.ptb-20 {
-  padding: 20px 0;
-}
+
 .ptb-40 {
-  padding: 40px 0;
+  padding: 5.32vh 0;
 }
 .pt-40 {
-  padding-top: 40px;
+  padding-top: 5.32vh;
 }
 .ptb-16 {
   padding: 16px 0;
@@ -75,37 +77,37 @@ section {
   padding: 15px 0 !important;
 }
 .ptb-20 {
-  padding: 20px 0 !important;
+  padding: 2.66vh 0 !important;
 }
 .ptb-8 {
-  padding: 8px 0;
+  padding: 1vh 0;
 }
 .pl-10 {
-  padding-left: 5px !important;
+  padding-left: 5vw !important;
 }
 .plr-20 {
-  padding: 0 20px;
+  padding: 0 4.6vw;
 }
-.row-ptb-16 {
-  padding: 16px 0 !important;
+.row-pb-16 {
+  padding-bottom: 2.2vh !important;
 }
 .ml-10 {
   margin-left: 10px !important;
 }
 .mt-10 {
-  margin-top: 10px;
+  margin-top: 1.5vh;
 }
 .mt-20 {
-  margin-top: 20px;
+  margin-top: 2.66vh;
 }
 .mt-30 {
-  margin-top: 30px;
+  margin-top: 4vh;
 }
 .mt-40 {
-  margin-top: 40px;
+  margin-top: 5.32vh;
 }
 .mt-60 {
-  margin-top: 60px;
+  margin-top: 7.8vh;
 }
 .mt-80 {
   margin-top: 80px;
@@ -114,7 +116,7 @@ section {
   margin-right: 10px;
 }
 .mr-20 {
-  margin-right: 20px;
+  margin-right: 5vw;
 }
 input[type="text"] {
   background: transparent;
@@ -126,19 +128,19 @@ input::placeholder {
   color: #95989a;
 }
 /***********************************************************
-                        GENERAL BUTTONS
+                      GENERAL BUTTONS
 ***********************************************************/
 .btn-general {
   font-family: "Montserrat", sans-serif;
   border-radius: 8px;
   transition: all 0.5s;
   border-style: none;
-  padding: 16px 20px;
-  font-size: 14px;
+  padding: 2.2vh 5vw;
+  font-size: 2vh;
   font-weight: 600;
 }
 .btn-white-sm {
-  padding: 10px 16px;
+  padding: 1.4vh 5.12vw;
 }
 .btn-bg {
   min-width: 80%;
@@ -154,10 +156,11 @@ input::placeholder {
   border: 1px solid #007eff;
 }
 .btn-login {
-  font-size: 16px;
-  box-shadow: 0px 4px 16px rgba(216, 216, 216, 0.25);
+  font-size: 2.2vh;
+  box-shadow: 0px 4px 16px rgba(150, 150, 150, 0.33);
   background-color: #fff;
   font-weight: normal;
+  line-height: 3vh;
 }
 .col-2 {
   padding: 0;
@@ -169,14 +172,14 @@ input::placeholder {
   padding: 0;
 }
 /***********************************************************
-                        HOME SECTION
+                      HOME SECTION
 ***********************************************************/
 
 .number-info {
   font-style: normal;
   font-weight: bold;
-  font-size: 48px;
-  line-height: 48px;
+  font-size: 6.4vh;
+  line-height: 6.4vh;
 }
 
 .text-blue {
@@ -199,19 +202,26 @@ input::placeholder {
 }
 .text-14-gray {
   color: #666;
-  font-size: 14px;
+  font-size: 2vh;
 }
 .illustrations {
   position: absolute;
   bottom: 0;
 }
-.illustrations img {
-  display: inline;
+.illustrations .row {
+  padding: 0;
 }
+/*
+.illustrations img{
+  display: inline;
+  position: relative;
+  top: 0.4vh;
+}
+*/
 .illus-img {
   position: relative;
-  left: -75px;
-  top: -10px;
+  left: -18vw;
+  /*    top: -1.6vh;*/
 }
 .illus-page-2 {
   position: absolute;
@@ -220,40 +230,48 @@ input::placeholder {
 }
 .illus-page-2 img {
   position: relative;
-  top: 50px;
-  left: 20px;
+  top: 6.7vh;
+  left: 2.7vh;
 }
 .illus-page-7 {
   position: absolute;
   right: 0;
   top: 0;
 }
+.illus-page-7 > img {
+  width: 50vw;
+}
+.border-bottom-grey {
+  border: 1px solid #f5f6fa;
+}
 .ht-100 {
   height: 100%;
   position: relative;
 }
 .main-title {
-  font-size: 36px;
+  font-size: 5vh;
   font-weight: 800;
 }
 .main-title-content {
-  font-size: 22px;
+  font-size: 3vh;
   font-weight: normal;
-  padding: 20px 0;
-  line-height: 31px;
+  line-height: 4.2vh;
+  padding-top: 1.5vh;
+  padding-bottom: 7vh;
 }
 .bg-gray {
   background-color: #f5f6fa;
 }
 .main-article-title {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 2.2vh;
+  line-height: 3.2vh;
   font-weight: normal;
 }
 .main-article-content {
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 2vh;
   font-weight: normal;
+  padding: 2.7vh 0;
+  line-height: 4vh;
 }
 .container-rounded {
   background: #ffffff;
@@ -262,31 +280,24 @@ input::placeholder {
 }
 .main-rating-outer {
   position: relative;
-  top: -40px;
+  top: -5.4vh;
 }
 .rating-icon {
   /*    margin-right: 19px;*/
-  width: 45px;
-  height: 45px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  width: 11vw;
+  height: 6vh;
+  position: relative;
+
   background: rgba(246, 166, 9, 0.1);
   border-radius: 4.33333px;
 }
-.rating-icon:active {
-  width: 45px;
-  height: 45px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #f6a609;
-  border-radius: 4.33333px;
+.rating-icons > div {
+  height: 36vh;
 }
 .rating-icon-2 {
   /*    margin-right: 19px;*/
-  width: 20px;
-  height: 20px;
+  width: 2.7vh;
+  height: 2.7vh;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -296,7 +307,7 @@ input::placeholder {
 .rating-marks {
   font-style: normal;
   font-weight: bold;
-  font-size: 17.3333px;
+  font-size: 2.7vh;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -309,20 +320,21 @@ input::placeholder {
 .rating-title {
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 1.9vh;
+  line-height: 2.8vh;
 }
 .rating-content {
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 1.6vh;
+  line-height: 2.4vh;
 }
 .rating-subcontent {
+  margin-top: 6px;
   font-style: normal;
   font-weight: normal;
-  font-size: 9px;
-  line-height: 12px;
+  font-size: 1.2vh;
+  line-height: 1.6vh;
 }
 .position-relative {
   position: relative;
@@ -331,15 +343,21 @@ input::placeholder {
   margin: 0 10px;
   float: left;
 }
+.pocket-svg > img {
+  height: 3vh;
+}
 .articles {
-  padding: 10px 0;
+  padding: 1.4vh 0;
+}
+.user-info {
+  padding-top: 5vh;
 }
 
 .user-title {
   font-style: normal;
   font-weight: 600;
-  font-size: 24px;
-  line-height: 29px;
+  font-size: 3.3vh;
+  line-height: 3.9vh;
 }
 .user-button-position {
   position: absolute;
@@ -358,8 +376,8 @@ input::placeholder {
 .done {
   font-style: normal;
   font-weight: 600;
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 2vh;
+  line-height: 2.8vh;
 }
 .done:hover {
   cursor: pointer;
@@ -368,8 +386,8 @@ input::placeholder {
   background-color: #2ac769;
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  left: -6vw;
+  right: -6vw;
   bottom: 0;
   transition: all 0.3s;
   opacity: 1;
@@ -377,21 +395,22 @@ input::placeholder {
 }
 .green-overlay-content {
   font-weight: 600;
-  font-size: 28px;
-  line-height: 42px;
+  font-size: 3.72vh;
+  line-height: 5.6vh;
   position: absolute;
   top: 50%;
   left: 0;
   transform: translateY(-50%);
   color: #fff;
-  margin-left: 20px;
+  margin-left: 4.7vw;
 }
 .user-stats-content-inner {
   font-style: normal;
   font-weight: bold;
-  font-size: 36px;
-  line-height: 44px;
+  font-size: 4.8vh;
+  line-height: 5.9vh;
 }
+
 .border-stats {
   border: 1px solid #f5f6fa;
 }

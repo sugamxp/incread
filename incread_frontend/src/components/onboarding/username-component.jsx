@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { withCookies } from "react-cookie";
+import { connect } from "react-redux";
+import { ThreeHorseLoading } from "react-loadingg";
 
 class UserNameComponent extends Component {
   state = {
     name: "",
     api_url: process.env.REACT_APP_API_URL,
     token: this.props.cookies.get("token"),
-    update_successfull: 0
+    username_update: 0
   };
 
   onChange = (e) => {
@@ -22,13 +24,13 @@ class UserNameComponent extends Component {
         { username: this.state.name }
       )
       .then((res) => {
-        this.setState({ update_successfull: 1 });
+        this.setState({ username_update: 1 });
         console.log(res.data);
       });
   };
 
   render() {
-    if (this.state.update_successfull === 1) {
+    if (this.state.username_update) {
       return <Redirect to="/stats" />;
     }
     return (
@@ -66,4 +68,8 @@ class UserNameComponent extends Component {
     );
   }
 }
-export default withCookies(UserNameComponent);
+const mapStateToProps = (state) => ({
+  incread_articles_imported: state.auth.incread_articles_imported
+});
+
+export default connect(mapStateToProps, null)(withCookies(UserNameComponent));

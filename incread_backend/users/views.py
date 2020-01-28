@@ -16,8 +16,11 @@ from users.utility import get_impact_score, get_prioritize_articles_list
 from django.http import HttpResponseRedirect, HttpResponse
 import random
 import json
+import time
 from users.models import CustomUser
+from django.conf import settings
 
+CONSUMER_KEY = settings.CONSUMER_KEY
 class UserArticleViewSet(viewsets.ModelViewSet):
     queryset = UserArticle.objects.all()
     serializer_class = UserArticleSerializer
@@ -45,15 +48,50 @@ class UserViewSet(viewsets.ModelViewSet):
     def stats(self, request,pk=None):
         user = CustomUser.objects.filter(access_token=pk)[0]
         user_articles = UserArticle.objects.filter(user_fk = user)
-        no_of_articles = len(user_articles)
-        unique_publishers = len(set(user_articles.values_list('publisher_fk')))
-        print(unique_publishers)
-        response = {'message':'Success','no_of_articles': no_of_articles, 'unique_publishers': unique_publishers, 'username': user.username}
+        # no_of_articles = len(user_articles)
+        # unique_publishers = len(set(user_articles.values_list('publisher_fk')))
+        # print(unique_publishers)
+        # response = {'message':'Success','no_of_articles': no_of_articles, 'unique_publishers': unique_publishers, 'username': user.username}
+        # return Response(response, status=status.HTTP_200_OK)
+        start = time.time()
+        url = f'https://getpocket.com/v3/get?consumer_key={CONSUMER_KEY}&access_token={pk}&detailType=detailed&state=unread&sort=newest'
+        res = requests.get(url).json()
+        articles  = res['list']
+
+        no_of_articles = 0
+
+        publishers = {}
+        ttr = 0
+        for i, article_id in enumerate(articles):
+            article = articles[article_id]
+            publisher_url = tldextract.extract(article.get('resolved_url')).registered_domain
+            if(article.get('time_to_read')):
+                ttr+=article.get('time_to_read')    
+
+            if publisher_url in publishers:
+                publishers[publisher_url] += 1
+            else:
+                publishers[publisher_url] = 1
+
+            no_of_articles = i+1
+
+        unique_publishers = len(publishers)
+        name, cnt = map(list, zip(*sorted(publishers.items(), key=lambda x: -x[1])[:2]))
+        response = {'message':'Success',
+                    'no_of_articles': no_of_articles, 
+                    'unique_publishers': unique_publishers, 
+                    'publisher_names' : name, 
+                    'publishers_cnt': cnt,
+                    'ttr' : ttr,
+                    'username': user.username}
+
+        stop = time.time()
+        print(stop-start)
         return Response(response, status=status.HTTP_200_OK)
         
     @action(detail=True, methods=['GET'])
     def tag_articles(self, request, pk=None):
-        user = CustomUser.objects.filter(id=pk)[0]
+        user = CustomUser.objects.filter(access_token=pk)[0]
         #onboarding
         if user.tag_count==0:
         
@@ -103,6 +141,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['POST'])
     def get_latest_articles(self, request,pk=None):
+        start = time.time()
         user = CustomUser.objects.filter(access_token=pk)[0]
         access_token = user.access_token
         try:
@@ -111,7 +150,7 @@ class UserViewSet(viewsets.ModelViewSet):
         except:
             last_timestamp=0
         print(last_timestamp)
-        url = f'https://getpocket.com/v3/get?consumer_key=85449-9131725c86119d6dca1cbd8a&access_token={access_token}&detailType=detailed&state=unread&sort=newest&since={last_timestamp}'
+        url = f'https://getpocket.com/v3/get?consumer_key={CONSUMER_KEY}&access_token={access_token}&detailType=detailed&state=unread&sort=newest&since={last_timestamp}'
 
         print(url)
         res = requests.get(url).json()
@@ -119,7 +158,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
         for i, article_id in enumerate(articles):
             article = articles[article_id]
-            print(article_id)
 
             #Publisher Model
             title = article.get('domain_metadata',{}).get('name')
@@ -127,8 +165,6 @@ class UserViewSet(viewsets.ModelViewSet):
             publisher_url = tldextract.extract(article.get('resolved_url')).registered_domain
 
             publisher, status =  Publisher.objects.get_or_create(title=title, url=publisher_url, logo=logo)
-            print("P =>",status)
-
             #Article Model
             url = article.get('resolved_url')
             title = article.get('resolved_title')
@@ -155,8 +191,6 @@ class UserViewSet(viewsets.ModelViewSet):
                                         top_image_url=top_image_url, 
                                         listen_duration_estimate=listen_duration_estimate, 
                                         publisher_fk=publisher)
-            print("A =>", status)
-
             #User Article
             time_added_pocket = int(article.get('time_added', '0'))
             time_updated_pocket =  int(article.get('time_updated', '0'))
@@ -173,11 +207,15 @@ class UserViewSet(viewsets.ModelViewSet):
                                             status=status)
 
         response = {'message' :'Success'}
+        stop = time.time()
+
+        print('Total Time', stop-start)
+
         return Response(response, status=http_status.HTTP_200_OK)
 
     @action(detail=True, methods=['POST'])
     def update_incread(self, request, pk=None):
-        user = CustomUser.objects.get(id=pk)
+        user = CustomUser.objects.get(access_token=pk)
         access_token = user.access_token
         
         user_articles = UserArticle.objects.filter(user_fk = user)
@@ -186,7 +224,7 @@ class UserViewSet(viewsets.ModelViewSet):
         for user_article in user_articles:
             articles_db.add(user_article.getItemId())
 
-        url = f'https://getpocket.com/v3/get?consumer_key=85449-9131725c86119d6dca1cbd8a&access_token={access_token}&\
+        url = f'https://getpocket.com/v3/get?consumer_key={CONSUMER_KEY}&access_token={access_token}&\
                  detailType=detailed&state=unread&sort=newest'
 
         res = requests.get(url).json()
@@ -249,7 +287,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['POST'])
     def tagging_complete(self, request, pk=None):
         if 'user_articles_list' in request.data:   
-            user = CustomUser.objects.get(id=pk)
+            user = CustomUser.objects.get(access_token=pk)
             user_articles_list = request.data['user_articles_list']
             for id in user_articles_list:
                 user_article = UserArticle.objects.get(id=id)
@@ -262,7 +300,7 @@ class UserViewSet(viewsets.ModelViewSet):
         
     @action(detail=False, methods=['POST'])
     def auth(self, request):
-        data = {'consumer_key':'89050-826efaf95b626015834d7a44', 
+        data = {'consumer_key':CONSUMER_KEY, 
                 'redirect_uri':'http://localhost:3000/'} 
 
         r = requests.post(url = 'https://getpocket.com/v3/oauth/request', data = data) 
@@ -282,7 +320,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if 'code' in request.data:
             code = request.data['code']
             print(code)
-            data = {'consumer_key':'89050-826efaf95b626015834d7a44', 
+            data = {'consumer_key':CONSUMER_KEY, 
                     'code':code} 
             r = requests.post(url = 'https://getpocket.com/v3/oauth/authorize',data=data) 
             print(r.text)

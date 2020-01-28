@@ -4,7 +4,7 @@ from django.db import models
 
 class Publisher(models.Model):
 
-    title = models.CharField(max_length=125, null=True)
+    title = models.CharField(max_length=250, null=True)
     url = models.CharField(max_length=250, null=True)
     logo = models.CharField(max_length=250, null=True)
 
@@ -13,7 +13,7 @@ class Publisher(models.Model):
 
 class Article(models.Model):
     item_id = models.BigIntegerField()
-    url = models.CharField(max_length=125)
+    url = models.CharField(max_length=1000)
     title = models.CharField(max_length=250)
     excerpt = models.CharField(max_length=5000, null=True)
     is_article = models.BooleanField()
