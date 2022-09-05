@@ -4,6 +4,12 @@ A Progressive Web Application deployed on AWS EC2 that enabled users to prioriti
 
 | | | |
 |:-------------------------:|:-------------------------:|:-------------------------:|
-|<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/intro.png">  blah |  <img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/onboard.png">|<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/tag1.png">|
-|<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/tag2.png">  |  <img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/tag3.png">|<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/list1.png">|
-|<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/list2.png">  |  <img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/list3.png">|<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/stats.png">|
+|<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/intro.png"> |  
+<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/onboard.png">|
+<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/tag1.png">|
+|<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/tag2.png">  |  
+<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/tag3.png">|
+<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/list1.png">|
+|<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/list2.png">  |  
+<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/list3.png">|
+<img width="1604" src="https://github.com/sugamxp/incread_v01/blob/master/images/stats.png">|
